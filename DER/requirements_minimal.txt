@@ -1,0 +1,32 @@
+# DER Minimal Requirements
+# Core dependencies for running the DER training pipeline
+
+# PyTorch (install the appropriate version for your system)
+# For CUDA: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+torch>=2.0.0
+
+# Transformers for loading pre-trained models
+transformers>=4.30.0
+
+# Data processing
+pandas>=2.0.0
+pyarrow>=14.0.0
+numpy>=1.24.0
+
+# BERTScore for reward calculation
+bert-score>=0.3.13
+
+# Training utilities
+tqdm>=4.65.0
+# wandb>=0.15.0
+
+# OpenAI API (for LLM inference - uses local vLLM server)
+openai==0.28.0
+
+# Optional: BLEURT scoring (requires special installation)
+# pip install git+https://github.com/google-research/bleurt.git
+
+# Optional: Additional dependencies from original requirements
+# accelerate>=0.24.0
+# deepspeed>=0.12.0
+# peft>=0.6.0

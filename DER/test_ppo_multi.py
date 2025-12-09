@@ -115,7 +115,7 @@ if __name__ == '__main__':
     parser.add_argument("--critic_model_bin", type=str, default="./model_pth2/critic_epoch_1.bin")
 
     #data config
-    parser.add_argument("--test_data_path", type=str, default="./mix-instruct/test_data_prepared.jsonl")
+    parser.add_argument("--test_data_path", type=str, default="../datasets/test_data_prepared.jsonl")
 
     # training hyperparameters
     parser.add_argument("--max_test_data_size", type=int, default=-1)

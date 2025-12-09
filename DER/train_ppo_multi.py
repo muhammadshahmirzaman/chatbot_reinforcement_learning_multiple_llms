@@ -188,7 +188,7 @@ if __name__ == '__main__':
     parser.add_argument("--do_train", type=str2bool, default=True)
 
     #data config
-    parser.add_argument("--train_data_path", type=str, default=".train_data_prepared.jsonl")
+    parser.add_argument("--train_data_path", type=str, default="../datasets/train_data_prepared.jsonl")
 
 
     # training hyperparameters
