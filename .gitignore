@@ -1,0 +1,63 @@
+# Python internals
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions & Binaries
+*.so
+*.dll
+*.dylib
+*.exe
+
+# Virtual Environments
+chat/
+venv/
+env/
+.env/
+.venv/
+Scripts/
+Lib/
+
+# Environment Variables
+.env
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Model Weights & Large Checkpoints (Downloadable/Re-creatable)
+*.pth
+*.pt
+*.bin
+*.ckpt
+*.safetensors
+*.h5
+*.onnx
+*.tflite
+
+# Logs and Debugging
+*.log
+wandb/
+runs/
+
+# Downloaded/Generated Models in DER folder
+DER/opt-125m/
+DER/bart-large-cnn/
+DER/bert-base-multilingual-cased/
+DER/bart_score/
+DER/bleurt/
+DER/model_pth2/
+
+# Generated Datasets (can be recreated from parquet)
+datasets/*.jsonl
+
+# Optional: Ignore large parquet files if they are backed up elsewhere
+# datasets/*.parquet
+
+# OS or System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
