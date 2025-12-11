@@ -24,7 +24,7 @@ import wandb
 from utils.Utils import seed_everything, str2bool
 from utils.data import load_data, Dataset
 from ppo_discreate import Actor, Critic, PPO
-from reward import Reward_calculate
+from reward import Reward_calculate, KTP_calculate
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -88,7 +88,8 @@ def main(args):
     ppo_agent = PPO(actor, critic)
     
     # Initialize reward calculator
-    reward_calculator = Reward_calculate()
+    # Use KTP_calculate for advanced state/reward generation
+    reward_calculator = KTP_calculate(device=device)
     reward_calculator.load_checkpoint()
     
     logger.info(f"Starting training for {args.epochs} epochs")

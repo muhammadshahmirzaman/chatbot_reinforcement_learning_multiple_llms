@@ -121,7 +121,9 @@ class Environment:
         if self.ifinit:
             inputs = self.question
         else:
-            inputs = self.KNOWLEDGE_TRANSFER_PROMPT.format(self.question, self.state_s)
+            # Use KTP feedback/state if available, otherwise standard template
+            feedback = getattr(self, 'last_ktp_feedback', self.state_s)
+            inputs = self.KNOWLEDGE_TRANSFER_PROMPT.format(self.question, feedback)
         
         # Generate response using the selected model adapter
         adapter = self.model_registry.get(model_name)
@@ -131,20 +133,32 @@ class Environment:
         response = adapter.generate(inputs, self.generation_config)
         self.state_s = response.text
         
-        # Update state encoding
-        new_inputs = self.STATE_TEMPLATE.format(self.question, self.state_s)
-        new_inputs = self.preprocess_text_data(new_inputs)
-        self.state = new_inputs['input_ids'].to(self.state_device)
-        self.attention_masks_e = new_inputs['attention_mask'].to(self.state_device)
-        
         # Track action sequence
         self.action_sequence.append(actions)
         self.ifinit = False
         
-        # Calculate reward score
-        score = self.reward_calculator.reward_calc([self.state_s], [self.target])
+        # Use KTP for Reward and Next State Generation
+        # KTP inputs: Question, Answer, Ground Truth
+        # KTP returns: Reward, Next State Info (feedback/hint)
+        reward, next_state_info = self.reward_calculator.process(
+            self.question, 
+            self.state_s, 
+            self.target
+        )
+        
+        # Store feedback for next iteration
+        self.last_ktp_feedback = next_state_info
+        
+        # Update state encoding for Agent (Actor/Critic)
+        # We use the KTP feedback as part of the state representation
+        new_inputs = self.STATE_TEMPLATE.format(self.question, next_state_info)
+        new_inputs = self.preprocess_text_data(new_inputs)
+        self.state = new_inputs['input_ids'].to(self.state_device)
+        self.attention_masks_e = new_inputs['attention_mask'].to(self.state_device)
         
         # Check stopping condition
+        score = [reward] # Maintain list format for compatibility
+        
         if score[0] >= self.stop_threshold:
             stop = 1
         else:
