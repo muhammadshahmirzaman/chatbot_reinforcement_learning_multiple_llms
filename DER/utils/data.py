@@ -47,12 +47,31 @@ def load_data(data_path, args, max_size=None):
     if max_size is not None and max_size > 0:
         data = data[:max_size]
     examples = []
-    for example in data:
+    for i, example in enumerate(data):
         new_item = {}
-        new_item['id'] = example['id']
-        new_item['instruction'] = example['instruction']
-        new_item['input'] = example['input']
-        new_item['output'] = example['output']
+        # Handle different field names
+        new_item['id'] = example.get('id', str(i))
+        
+        # Map source -> instruction if needed
+        if 'instruction' in example:
+            new_item['instruction'] = example['instruction']
+        elif 'source' in example:
+            new_item['instruction'] = example['source']
+        else:
+            new_item['instruction'] = example.get('prompt', '')
+            
+        new_item['input'] = example.get('input', '')
+        
+        # Map target -> output if needed
+        if 'output' in example:
+            new_item['output'] = example['output']
+        elif 'target' in example:
+            new_item['output'] = example['target']
+        elif 'response' in example:
+            new_item['output'] = example['response']
+        else:
+            new_item['output'] = ''
+            
         examples.append(new_item)
     return examples
 

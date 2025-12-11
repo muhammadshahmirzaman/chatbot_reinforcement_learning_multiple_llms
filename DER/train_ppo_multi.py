@@ -40,12 +40,20 @@ def main(args):
     logger.info(f"Device: {device}, Available GPUs: {n_gpu}")
     
     # Initialize wandb
-    if not args.disable_wandb:
+    # To hardcode API key, uncomment:
+    # os.environ["WANDB_API_KEY"] = "YOUR_KEY_HERE"
+    
+    wandb_mode = "online" if not args.disable_wandb else "disabled"
+    try:
         wandb.init(
             project=args.wandb_project,
             name=args.wandb_name,
-            config=vars(args)
+            config=vars(args),
+            mode=wandb_mode
         )
+    except Exception as e:
+        logger.warning(f"WandB init failed: {e}. Disabling WandB.")
+        wandb.init(mode="disabled")
     
     # Load training data
     train_dataset = None
@@ -319,7 +327,7 @@ if __name__ == '__main__':
                         help="Device for training")
     
     # Wandb config
-    parser.add_argument("--disable_wandb", type=str2bool, default=False)
+    parser.add_argument("--disable_wandb", type=str2bool, default=True)
     parser.add_argument("--wandb_project", type=str, default="DER-Training")
     parser.add_argument("--wandb_name", type=str, default="multi-llm-ppo")
     
