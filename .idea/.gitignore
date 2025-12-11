@@ -16,3 +16,15 @@ venv/
 *.pth
 __pycache__/
 *.pyc
+
+
+chat/
+Lib/
+env/
+venv/
+__pycache__/
+*.dll
+*.exe
+*.so
+*.bin
+*.pth
