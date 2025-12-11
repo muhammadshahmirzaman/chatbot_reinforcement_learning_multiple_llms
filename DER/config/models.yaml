@@ -1,0 +1,184 @@
+# DER Model Configuration
+# Configuration file for model adapters supporting both online and offline models.
+
+version: "1.0"
+
+# ============ RESOURCE MANAGEMENT ============
+resource_management:
+  max_gpu_memory_gb: 24.0
+  max_loaded_offline_models: 2
+  prefer_offline: true  # Prefer offline when both types are available
+
+# ============ DEFAULT GENERATION SETTINGS ============
+defaults:
+  generation:
+    max_tokens: 512
+    temperature: 0.7
+    top_p: 0.9
+    timeout: 1800
+    do_sample: true
+
+# ============ MODEL DEFINITIONS ============
+models:
+  # ---------- ONLINE MODELS (API-based) ----------
+  - name: "koala-7B-HF"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "koala-7B-HF"
+  
+  - name: "Vicuna-13B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "Vicuna-13B"
+  
+  - name: "alpaca-13B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "alpaca-13B"
+  
+  - name: "dolly-12B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "dolly-12B"
+  
+  - name: "baize-13B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "baize-13B"
+  
+  - name: "stablelm-7B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "stablelm-7B"
+  
+  - name: "mpt-7B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "mpt-7B"
+  
+  - name: "OpenAssistant-12B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "OpenAssistant-12B"
+  
+  - name: "t5-xxl"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "t5-xxl"
+  
+  - name: "moss"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "moss"
+  
+  - name: "chatglm-6B"
+    type: "api"
+    execution_mode: "online"
+    enabled: true
+    config:
+      api_base: "http://localhost:8000/v1"
+      model_name: "chatglm-6B"
+
+  # ---------- OFFLINE MODELS (Local Inference) ----------
+  - name: "openassistant-sft-local"
+    type: "openassistant"
+    execution_mode: "offline"
+    enabled: false  # Enable when you have local weights
+    config:
+      model_path: "../models/LAION-AI-Open-Assistant-e1769c1/model"
+      device: "cuda:0"
+      model_type: "sft"
+      estimated_memory_mb: 8000
+
+  - name: "openassistant-rl-local"
+    type: "openassistant"
+    execution_mode: "offline"
+    enabled: false
+    config:
+      model_path: "../models/LAION-AI-Open-Assistant-e1769c1/model"
+      device: "cuda:0"
+      model_type: "rl"
+      estimated_memory_mb: 8000
+
+  # Generic HuggingFace Transformers models
+  - name: "phi-3-mini"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false
+    config:
+      model_name_or_path: "microsoft/phi-3-mini-4k-instruct"
+      device: "cuda:0"
+      torch_dtype: "float16"
+      estimated_memory_mb: 4000
+
+  - name: "tinyllama"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false
+    config:
+      model_name_or_path: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+      device: "cuda:0"
+      torch_dtype: "float16"
+      estimated_memory_mb: 2500
+
+  # Cached responses for testing/reproducibility
+  - name: "cached-baseline"
+    type: "cached"
+    execution_mode: "offline"
+    enabled: false
+    config:
+      cache_file: "./cache/baseline_responses.json"
+      save_new_responses: true
+
+# ============ MODEL COSTS (for reward shaping) ============
+# Lower cost = cheaper/faster model
+model_costs:
+  # Online models (original DER defaults)
+  koala-7B-HF: 0.007
+  Vicuna-13B: 0.013
+  alpaca-13B: 0.013
+  dolly-12B: 0.012
+  baize-13B: 0.013
+  stablelm-7B: 0.007
+  mpt-7B: 0.007
+  OpenAssistant-12B: 0.012
+  t5-xxl: 0.011
+  moss: 0.016
+  chatglm-6B: 0.006
+  
+  # Offline models
+  openassistant-sft-local: 0.010
+  openassistant-rl-local: 0.010
+  phi-3-mini: 0.005
+  tinyllama: 0.003
+  cached-baseline: 0.001

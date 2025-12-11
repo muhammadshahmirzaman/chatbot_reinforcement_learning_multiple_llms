@@ -1,0 +1,88 @@
+﻿c:\Users\User\Desktop\sha
+hmir\chatbot\chatbot_rein
+forcement_learning_multip
+le_llms\chat\Scripts\pyth
+on.exe : INFO - Loading 
+OpenAssistant model 
+test-openassistant to cpu
+At line:1 char:1
++ c:\Users\User\Desktop\s
+hahmir\chatbot\chatbot_re
+inforcement_learning_ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo       
+       : NotSpecified:   
+  (INFO - Loading ...s   
+ sistant to cpu:Strin    
+g) [], RemoteExcepti    
+on
+    + FullyQualifiedErro 
+   rId : NativeCommandE  
+  rror
+ 
+WARNING - Could not 
+import OpenAssistant 
+utilities, using 
+standard loading
+`torch_dtype` is 
+deprecated! Use `dtype` 
+instead!
+INFO - Successfully 
+loaded test-openassistant
+INFO - Offloading 
+test-openassistant to CPU
+INFO - Unloading 
+test-openassistant
+############################################################
+# OpenAssistant Adapter Test
+############################################################
+
+============================================================
+Testing OpenAssistantAdapter Import
+============================================================
+   Import successful!
+   OpenAssistantAdapter is correctly a subclass of OfflineAdapter
+   PASS: Import test passed
+
+============================================================
+Testing OpenAssistantAdapter
+============================================================
+
+1. Creating OpenAssistantAdapter...
+   Adapter created: OpenAssistantAdapter(name=test-openassistant, type=sft, status=unloaded)
+   Execution mode: ExecutionMode.OFFLINE
+   Model type: sft
+   Is loaded: False
+   PASS: Adapter created correctly
+
+2. Loading model from ./opt-125m...
+   Model loaded successfully!
+   Is loaded: True
+   Memory usage: MemoryInfo(gpu_memory_mb=0, cpu_memory_mb=500, is_loaded=True)
+   PASS: Model loaded correctly
+
+3. Testing text generation...
+   Generation successful!
+   Prompt: What is machine learning?
+   Response: 
+Machine learning is a new technology that is being applied to computer science. It is a new technology that is being applied to computer science. It is a new technology that is being applied to compu...
+   Latency: 2436.6ms
+   Tokens used: 56
+   Execution mode: ExecutionMode.OFFLINE
+   PASS: Generation works
+
+4. Testing offload to CPU...
+   Offload successful!
+   Device is now: cpu
+   PASS: Offload works
+
+5. Testing unload...
+   Unload successful!
+   Is loaded: False
+   PASS: Unload works
+
+============================================================
+ALL TESTS PASSED!
+============================================================
