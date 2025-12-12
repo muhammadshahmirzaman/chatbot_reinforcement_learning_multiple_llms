@@ -38,6 +38,8 @@ class TransformersAdapter(OfflineAdapter):
         torch_dtype: str = "float16",
         estimated_memory_mb: float = 4000,
         trust_remote_code: bool = False,
+        load_in_4bit: bool = False,
+        load_in_8bit: bool = False,
         **kwargs
     ):
         """
@@ -50,6 +52,8 @@ class TransformersAdapter(OfflineAdapter):
             torch_dtype: Data type ("float16", "bfloat16", "float32").
             estimated_memory_mb: Estimated GPU memory usage in MB.
             trust_remote_code: Whether to trust remote code for models.
+            load_in_4bit: Use 4-bit quantization (requires bitsandbytes).
+            load_in_8bit: Use 8-bit quantization (requires bitsandbytes).
         """
         self._name = name
         self.model_path = model_name_or_path
@@ -57,6 +61,8 @@ class TransformersAdapter(OfflineAdapter):
         self.torch_dtype = self._get_torch_dtype(torch_dtype)
         self._estimated_memory_mb = estimated_memory_mb
         self.trust_remote_code = trust_remote_code
+        self.load_in_4bit = load_in_4bit
+        self.load_in_8bit = load_in_8bit
         
         self.model = None
         self.tokenizer = None
@@ -95,6 +101,22 @@ class TransformersAdapter(OfflineAdapter):
             trust_remote_code=self.trust_remote_code
         )
         
+        # Prepare quantization config
+        quantization_config = None
+        if self.load_in_4bit or self.load_in_8bit:
+            if not TORCH_AVAILABLE:
+                logger.warning("Torch not available, skipping quantization config")
+            else:
+                try:
+                    from transformers import BitsAndBytesConfig
+                    quantization_config = BitsAndBytesConfig(
+                        load_in_4bit=self.load_in_4bit,
+                        load_in_8bit=self.load_in_8bit,
+                        bnb_4bit_compute_dtype=torch.float16 if self.load_in_4bit else None
+                    )
+                except ImportError:
+                    logger.warning("Could not import BitsAndBytesConfig")
+
         # Handle device_map for GPU vs CPU
         if device == "cpu":
             self.model = AutoModelForCausalLM.from_pretrained(
@@ -103,11 +125,19 @@ class TransformersAdapter(OfflineAdapter):
                 trust_remote_code=self.trust_remote_code
             ).cpu()
         else:
+            # Arguments for from_pretrained
+            kwargs = {
+                "torch_dtype": self.torch_dtype,
+                "device_map": device,
+                "trust_remote_code": self.trust_remote_code,
+            }
+            
+            if quantization_config:
+                kwargs["quantization_config"] = quantization_config
+            
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_path,
-                torch_dtype=self.torch_dtype,
-                device_map=device,
-                trust_remote_code=self.trust_remote_code
+                **kwargs
             )
         
         self.model.eval()

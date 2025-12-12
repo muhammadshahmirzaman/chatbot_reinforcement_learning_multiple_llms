@@ -36,8 +36,8 @@ class Environment:
         actor,
         reward_calculator,
         model_registry: ModelRegistry,
-        state_device: str = "cuda:3",
-        actor_device: str = "cuda:0",
+        state_device: str = "cpu",
+        actor_device: str = "cpu",
         stop_threshold: float = 0.73
     ):
         """

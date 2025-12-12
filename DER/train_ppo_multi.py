@@ -121,7 +121,13 @@ def main(args):
                     if args.use_legacy_mode:
                         env = env_class(actor, reward_calculator)
                     else:
-                        env = env_class(actor, reward_calculator, model_registry)
+                        env = env_class(
+                            actor, 
+                            reward_calculator, 
+                            model_registry,
+                            state_device=device,
+                            actor_device=device
+                        )
                     
                     args_tuple = (
                         env,
@@ -323,7 +329,7 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", type=int, default=10)
     
     # Device config
-    parser.add_argument("--device", type=str, default="cuda:3",
+    parser.add_argument("--device", type=str, default="cuda:0",
                         help="Device for training")
     
     # Wandb config

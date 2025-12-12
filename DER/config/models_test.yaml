@@ -1,0 +1,65 @@
+# DER Model Configuration - TEST MODE
+# Simplified config using offline/cached models for testing without API server
+
+version: "1.0"
+
+# ============ RESOURCE MANAGEMENT ============
+resource_management:
+  max_gpu_memory_gb: 24.0
+  max_loaded_offline_models: 2
+  prefer_offline: true
+
+# ============ DEFAULT GENERATION SETTINGS ============
+defaults:
+  generation:
+    max_tokens: 50  # Shorter for faster testing
+    temperature: 0.7
+    top_p: 0.9
+    timeout: 30
+    do_sample: true
+
+# ============ MODEL DEFINITIONS ============
+models:
+  # Using cached adapter for deterministic testing
+  - name: "cached-model-1"
+    type: "cached"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      cache_file: "./cache/test_cache_1.json"
+      save_new_responses: true
+
+  - name: "cached-model-2"
+    type: "cached"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      cache_file: "./cache/test_cache_2.json"
+      save_new_responses: true
+
+  - name: "cached-model-3"
+    type: "cached"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      cache_file: "./cache/test_cache_3.json"
+      save_new_responses: true
+
+# Using local transformers model (opt-125m)
+  - name: "opt-125m-local"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      model_name_or_path: "./opt-125m"
+      device: "cpu"  # Use CPU for compatibility
+      torch_dtype: "float32"
+      estimated_memory_mb: 500
+      use_safetensors: true
+
+# ============ MODEL COSTS (for reward shaping) ============
+model_costs:
+  cached-model-1: 0.001
+  cached-model-2: 0.002
+  cached-model-3: 0.003
+  opt-125m-local: 0.005

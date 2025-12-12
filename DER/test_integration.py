@@ -35,10 +35,12 @@ def ensure_test_model():
     print("   Downloading test model (facebook/opt-125m)...")
     try:
         from transformers import AutoModelForCausalLM, AutoTokenizer
-        model = AutoModelForCausalLM.from_pretrained("facebook/opt-125m")
+        # Use use_safetensors=True to bypass torch < 2.6 vulnerability issue
+        model = AutoModelForCausalLM.from_pretrained("facebook/opt-125m", use_safetensors=True)
         tokenizer = AutoTokenizer.from_pretrained("facebook/opt-125m")
         os.makedirs(model_path, exist_ok=True)
-        model.save_pretrained(model_path)
+        # Save with safe_serialization=True as well
+        model.save_pretrained(model_path, safe_serialization=True)
         tokenizer.save_pretrained(model_path)
         print("   Model downloaded successfully")
         return True

@@ -1,0 +1,158 @@
+# DER Production Model Configuration
+# Uses locally available models and easy-to-download transformers
+
+version: "1.0"
+
+# ============ RESOURCE MANAGEMENT ============
+resource_management:
+  max_gpu_memory_gb: 24.0
+  max_loaded_offline_models: 3  # Load up to 3 models in memory
+  prefer_offline: true
+
+# ============ DEFAULT GENERATION SETTINGS ============
+defaults:
+  generation:
+    max_tokens: 256
+    temperature: 0.7
+    top_p: 0.9
+    timeout: 60
+    do_sample: true
+
+# ============ MODEL DEFINITIONS ============
+models:
+  # ========== SMALL LOCAL MODELS (Fast, Low Memory) ==========
+  
+  # Already available - OPT 125M
+  - name: "opt-125m"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      model_name_or_path: "./opt-125m"
+      device: "cuda:0"
+      dtype: "float32"
+      estimated_memory_mb: 500
+      use_safetensors: true
+  
+  # OpenAssistant - Using official 7B Falcon model (4-bit quantized)
+  # Fits directly on 8GB GPU (~5GB VRAM) using bitsandbytes
+  - name: "openassistant-falcon-7b-4bit"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      model_name_or_path: "OpenAssistant/falcon-7b-sft-mix-2000"
+      device: "cuda:0"
+      dtype: "float16"
+      estimated_memory_mb: 5500
+      use_safetensors: true
+      trust_remote_code: true
+      load_in_4bit: true
+  
+  # TinyLlama - Very fast, 1.1B parameters
+  - name: "tinyllama-1.1b"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false # Disabled to save VRAM for OpenAssistant
+    config:
+      model_name_or_path: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+      device: "cuda:0"
+      dtype: "float16"
+      estimated_memory_mb: 1000 # Reduced from 2500MB via 4-bit
+      use_safetensors: true
+      load_in_4bit: true
+  
+  # Phi-2 - Microsoft's 2.7B model
+  - name: "phi-2"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false # Disabled to save VRAM for OpenAssistant
+    config:
+      model_name_or_path: "microsoft/phi-2"
+      device: "cuda:0"
+      dtype: "float16"
+      estimated_memory_mb: 6000
+      use_safetensors: true
+  
+  # ========== MEDIUM MODELS (Good Quality, Moderate Memory) ==========
+  
+  # Phi-3 Mini - 3.8B parameters
+  # DISABLED: Requires more GPU memory than available (8GB)
+  - name: "phi-3-mini"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false  # Disabled - CUDA OOM on 8GB GPU
+    config:
+      model_name_or_path: "microsoft/Phi-3-mini-4k-instruct"
+      device: "cuda:0"
+      dtype: "float16"
+      estimated_memory_mb: 8000
+      use_safetensors: true
+  
+  # Gemma 2B - Google's small model
+  - name: "gemma-2b"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false  # Requires acceptance of license
+    config:
+      model_name_or_path: "google/gemma-2b-it"
+      device: "cuda:0"
+      torch_dtype: "float16"
+      estimated_memory_mb: 5000
+      use_safetensors: true
+  
+  # ========== LARGER MODELS (Higher Quality, More Memory) ==========
+  
+  # Mistral 7B Instruct - Popular 7B model
+  - name: "mistral-7b-instruct"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false  # Enable if you have enough GPU memory
+    config:
+      model_name_or_path: "mistralai/Mistral-7B-Instruct-v0.2"
+      device: "cuda:0"
+      torch_dtype: "float16"
+      estimated_memory_mb: 14000
+      use_safetensors: true
+  
+  # Llama-2 7B Chat - Meta's model
+  - name: "llama-2-7b-chat"
+    type: "transformers"
+    execution_mode: "offline"
+    enabled: false  # Requires license acceptance
+    config:
+      model_name_or_path: "meta-llama/Llama-2-7b-chat-hf"
+      device: "cuda:0"
+      torch_dtype: "float16"
+      estimated_memory_mb: 14000
+      use_safetensors: true
+  
+  # ========== CACHED ADAPTERS (For Fast Testing) ==========
+  
+  - name: "cached-baseline"
+    type: "cached"
+    execution_mode: "offline"
+    enabled: true
+    config:
+      cache_file: "./cache/baseline_responses.json"
+      save_new_responses: true
+
+# ============ MODEL COSTS (for reward shaping) ============
+# Lower cost = prefer this model (faster/cheaper)
+# Higher cost = penalize (slower/expensive)
+model_costs:
+  # Small models - lowest cost
+  opt-125m: 0.001
+  openassistant-falcon-7b-4bit: 0.005 # Moderate cost (GPU 4-bit)
+  tinyllama-1.1b: 0.003
+  cached-baseline: 0.0005
+  
+  # Medium models
+  phi-2: 0.005
+  phi-3-mini: 0.007
+  gemma-2b: 0.006
+  
+  # Large models - highest cost
+  mistral-7b-instruct: 0.015
+  llama-2-7b-chat: 0.015
+

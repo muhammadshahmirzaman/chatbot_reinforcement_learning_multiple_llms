@@ -1,0 +1,117 @@
+STDOUT:
+############################################################
+# DER Integration Test Suite
+############################################################
+
+Device: cpu
+
+============================================================
+SETUP: Checking Test Model
+============================================================
+   Test model already exists
+
+============================================================
+TEST 1: Data Loading
+============================================================
+   Created test data at ./test_data_temp.jsonl
+Loading data from ./test_data_temp.jsonl
+   Loaded 3 examples
+   Sample: instruction='What is 2+2?...'
+   Dataset created with 3 items
+   Dataset item keys: ['input_ids', 'attention_mask', 'source', 'target']
+   PASS
+
+============================================================
+TEST 2: Model Registry
+============================================================
+   Registry loaded successfully
+   Total models: 11
+   Online models: ['koala-7B-HF', 'Vicuna-13B', 'alpaca-13B']...
+   Offline models: []
+   Got adapter for 'koala-7B-HF': APIAdapter
+   PASS
+
+============================================================
+TEST 3: Offline Adapter Generation
+============================================================
+   Loading model...
+   Model loaded: True
+   Testing generation...
+   Response: '    How are you feeling?    How are you feeling?    How are you feeling?    How are you...'
+   Latency: 937.0ms
+   PASS
+
+============================================================
+TEST 4: Environment + Registry Integration
+============================================================
+   LegacyEnvironment failed: No module named 'openai'
+   This is expected if LLM API is not configured
+   ModelRegistry loaded with 11 models
+   PASS (registry integration)
+
+============================================================
+TEST 5: Full Pipeline with CachedAdapter
+============================================================
+   Cache populated with test data
+   Q: What is 2+2?... -> A: 2+2 equals 4....
+   Q: What is the capital of France?... -> A: Paris is the capital of France...
+   Q: Explain machine learning.... -> A: Machine learning is a subset o...
+   Cache stats: {'cache_size': 3, 'cache_hits': 3, 'cache_misses': 0, 'hit_rate_percent': 100.0}
+   PASS
+
+============================================================
+TEST 6: Reward Calculation
+============================================================
+   WARNING: bert_score not installed
+   Install with: pip install bert_score
+   SKIP (missing dependency)
+
+############################################################
+# Integration Test Summary
+############################################################
+  [+] Data Loading: PASS
+  [+] Model Registry: PASS
+  [+] Offline Adapter: PASS
+  [+] Environment+Registry: PASS
+  [+] Cached Pipeline: PASS
+  [+] Reward Calculation: PASS
+
+Total: 6 passed, 0 failed
+
+============================================================
+ALL INTEGRATION TESTS PASSED!
+The DER system components are working together correctly.
+============================================================
+
+
+STDERR:
+INFO - Registered model 'koala-7B-HF' (online)
+INFO - Registered model 'Vicuna-13B' (online)
+INFO - Registered model 'alpaca-13B' (online)
+INFO - Registered model 'dolly-12B' (online)
+INFO - Registered model 'baize-13B' (online)
+INFO - Registered model 'stablelm-7B' (online)
+INFO - Registered model 'mpt-7B' (online)
+INFO - Registered model 'OpenAssistant-12B' (online)
+INFO - Registered model 't5-xxl' (online)
+INFO - Registered model 'moss' (online)
+INFO - Registered model 'chatglm-6B' (online)
+INFO - Loading test-model from ./opt-125m to cpu
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO - Successfully loaded test-model
+INFO - Unloading test-model
+INFO - Registered model 'koala-7B-HF' (online)
+INFO - Registered model 'Vicuna-13B' (online)
+INFO - Registered model 'alpaca-13B' (online)
+INFO - Registered model 'dolly-12B' (online)
+INFO - Registered model 'baize-13B' (online)
+INFO - Registered model 'stablelm-7B' (online)
+INFO - Registered model 'mpt-7B' (online)
+INFO - Registered model 'OpenAssistant-12B' (online)
+INFO - Registered model 't5-xxl' (online)
+INFO - Registered model 'moss' (online)
+INFO - Registered model 'chatglm-6B' (online)
+INFO - No cache file found at C:\Users\mehar\AppData\Local\Temp\test_pipeline_cache.json, starting fresh
+
+
+EXIT CODE: 0

@@ -1,0 +1,8 @@
+# 1. Download models
+python setup_production_models.py --download
+
+# 2. Test training
+python train_production.py --quick-test
+
+# 3. Full training  
+python train_production.py --full-training --device cuda:0
