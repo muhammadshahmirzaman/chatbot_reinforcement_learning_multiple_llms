@@ -1,0 +1,49 @@
+# ==========================================
+# Core GPU Deep Learning Stack (CUDA 11.8)
+# ==========================================
+# Installs PyTorch with CUDA 11.8 support. 
+# Crucial: This must be installed before other torch-dependent libraries if they don't specify the index-url.
+torch==2.1.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+torchvision==0.16.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+torchaudio==2.1.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+
+# ==========================================
+# LLM & Optimization
+# ==========================================
+transformers==4.36.2
+tokenizers==0.15.0
+accelerate==0.25.0
+bitsandbytes==0.41.3    # 8-bit/4-bit quantization support (Requires GPU)
+sentencepiece==0.1.99
+protobuf==4.25.1
+openai==1.6.1           # For Online Adapters (GPT-3.5/4)
+
+# ==========================================
+# Evaluation & Metrics
+# ==========================================
+bert-score==0.3.13
+rouge-score==0.1.2
+sacrebleu==2.4.0
+# bleurt support (install from source if needed for reward model)
+# bleurt @ git+https://github.com/google-research/bleurt.git
+
+# ==========================================
+# Scientific Computing & Data Processing
+# ==========================================
+numpy<2.0.0             # PINNED: To prevent compatibility issues with legacy libraries
+pandas==2.1.4
+scipy==1.11.4
+datasets==2.15.0        # HuggingFace Datasets
+
+# ==========================================
+# Experiment Tracking & System
+# ==========================================
+wandb==0.16.1
+psutil==5.9.7           # For memory resource management
+tqdm==4.66.1
+pyyaml==6.0.1
+requests==2.31.0
+regex==2023.12.25
+fsspec==2023.12.2
+appdirs==1.4.4
+colorama==0.4.6         # Windows terminal coloring
