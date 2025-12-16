@@ -40,7 +40,7 @@ class ResourceManager:
     def ensure_loaded(
         self,
         adapter: OfflineAdapter,
-        device: str = "cuda"
+        device: str = "cpu"
     ) -> None:
         """
         Ensure the adapter is loaded, evicting others if necessary.
@@ -56,13 +56,12 @@ class ResourceManager:
             logger.debug(f"Model '{adapter.name}' already loaded, updated LRU")
             return
         
-        # Evict models if we've reached the limit
-        while len(self._loaded_adapters) >= self.max_loaded_models:
-            self._evict_lru()
-        
-        # Check GPU memory availability
-        estimated_memory = adapter.get_memory_usage().gpu_memory_mb
-        self._ensure_memory_available(estimated_memory)
+        # Evict models only when targeting GPU
+        if not device.startswith("cpu"):
+            while len(self._loaded_adapters) >= self.max_loaded_models:
+                self._evict_lru()
+            estimated_memory = adapter.get_memory_usage().gpu_memory_mb
+            self._ensure_memory_available(estimated_memory)
         
         # Load the model
         logger.info(f"Loading model '{adapter.name}' to {device}")

@@ -59,7 +59,12 @@ def main(args):
     train_dataset = None
     if args.do_train:
         train_examples = load_data(args.train_data_path, args, max_size=args.max_train_data_size)
+        if not train_examples:
+            raise ValueError(f"No training examples found at {args.train_data_path}")
         train_dataset = Dataset(train_examples)
+    
+    if train_dataset is None:
+        raise ValueError("Training requested but dataset could not be loaded.")
     
     train_dataloader = DataLoader(train_dataset, args.batch_size, shuffle=True)
     
@@ -77,11 +82,19 @@ def main(args):
         from environment import Environment
         
         model_registry = ModelRegistry.from_config(args.model_config)
-        num_models = model_registry.get_num_models()
+        # Attempt to load/admit only models that successfully initialize
+        available_models = []
+        for name in model_registry.list_models():
+            adapter = model_registry.get(name)
+            if adapter is not None:
+                available_models.append(name)
+        if len(available_models) < 2:
+            raise RuntimeError(f"Need at least 2 loadable models; found {available_models}")
+        num_models = len(available_models)
         env_class = Environment
-        model_costs = [model_registry.get_model_cost(name) for name in model_registry.list_models()]
+        model_costs = [model_registry.get_model_cost(name) for name in available_models]
         
-        logger.info(f"Loaded {num_models} models: {model_registry.list_models()}")
+        logger.info(f"Loaded {num_models} models: {available_models}")
     
     # Initialize actor and critic networks
     actor = Actor(
@@ -157,8 +170,9 @@ def main(args):
             
             logger.debug(f"Collected {len(trajectorys)} trajectories")
             
-            if len(trajectorys) < 4:
+            if len(trajectorys) < 1:
                 logger.warning("Not enough trajectories collected, skipping PPO update.")
+                save_model(actor, critic, epoch, args.save_dir)
                 continue
             
             # Log rewards and update
@@ -318,7 +332,8 @@ if __name__ == '__main__':
     
     # Data config
     parser.add_argument("--train_data_path", type=str, 
-                        default="../datasets/train_data_prepared.jsonl")
+                        default="../datasets/train_data_prepared_1.jsonl",
+                        help="Path to training data (.jsonl). Falls back to *_1 if missing.")
     
     # Training hyperparameters
     parser.add_argument("--max_train_data_size", type=int, default=-1)

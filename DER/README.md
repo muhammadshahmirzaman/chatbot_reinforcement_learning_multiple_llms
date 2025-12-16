@@ -38,6 +38,12 @@ conda activate DER
 pip install r requirements.txt
 ```
 
+## CPU-only (Windows + PowerShell)
+- Activate the provided venv: `.\chat\Scripts\Activate.ps1`
+- Install deps: `pip install -r requirements.txt`
+- Run the CPU verification (quick test, creates checkpoints): `python DER/verify_train_production_cpu.py`
+- For manual quick test: `cd DER && python train_production.py --quick-test --device cpu`
+
 ## 🔨 Training
 ```bash
 python train_ppo_multi.py

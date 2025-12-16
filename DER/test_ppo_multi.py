@@ -78,10 +78,14 @@ def main(args):
     
     all_trajectories = []
     
+    references = []
+    predictions = []
+
     for batch_idx, batch in enumerate(tqdm(test_dataloader, desc="Evaluating")):
         input_ids = batch['input_ids'].to(device)
         attention_masks = batch['attention_mask'].to(device)
         sources = batch['source']
+        targets = batch.get('target') if isinstance(batch, dict) else None
         
         trajectorys = []
         i = 0
@@ -105,6 +109,7 @@ def main(args):
                     input_ids[i + j],
                     attention_masks[i + j],
                     sources[i + j],
+                    targets[i + j] if targets else None,
                 )
                 thread_args.append(args_tuple)
             
@@ -123,6 +128,10 @@ def main(args):
             i += args.thread_nums
         
         all_trajectories.extend(trajectorys)
+        for traj in trajectorys:
+            if 'reference' in traj:
+                references.append(traj['reference'])
+                predictions.append(traj.get('final_answer', ""))
     
     # Save results
     output_file_path = os.path.join(args.out_dir, args.output_filename)
@@ -134,11 +143,23 @@ def main(args):
             output_file.write('\n')
     
     logger.info("Evaluation complete!")
-    
+
     # Print summary statistics
     if all_trajectories:
         avg_steps = np.mean([len(t.get('actions', [])) for t in all_trajectories])
         logger.info(f"Average steps per question: {avg_steps:.2f}")
+
+    # Compute simple NLP evaluation (exact-match confusion matrix)
+    if references and predictions:
+        results = compute_confusion_and_metrics(references, predictions)
+        logger.info(f"Accuracy: {results['accuracy']:.3f} | Precision: {results['precision']:.3f} "
+                    f"| Recall: {results['recall']:.3f} | F1: {results['f1']:.3f}")
+        logger.info(f"Confusion matrix (tp, fp, fn, tn): {results['confusion_matrix']}")
+
+        metrics_path = os.path.join(args.out_dir, "evaluation_metrics.json")
+        with open(metrics_path, "w", encoding="utf-8") as mf:
+            json.dump(results, mf, indent=2)
+        logger.info(f"Saved evaluation metrics to {metrics_path}")
 
 
 def worker(thread_id, collect_args):
@@ -150,7 +171,54 @@ def worker(thread_id, collect_args):
         logger.error(f"Thread {thread_id} failed: {e}")
 
 
-def collect(environment, trajectorys, agent, inputs_id, attention_mask, source):
+def normalize_text(text: str) -> str:
+    """Lowercase and strip helper for rough matching."""
+    return (text or "").strip().lower()
+
+
+def compute_confusion_and_metrics(references, predictions):
+    """
+    Build a simple correctness confusion matrix based on exact-match after
+    normalization. This keeps dependencies light (no sklearn needed).
+    """
+    assert len(references) == len(predictions)
+    tp = fp = fn = tn = 0
+
+    for ref, pred in zip(references, predictions):
+        ref_norm = normalize_text(ref)
+        pred_norm = normalize_text(pred)
+        is_correct = pred_norm == ref_norm and bool(ref_norm)
+
+        if is_correct:
+            tp += 1
+        else:
+            # Binary matrix: treat incorrect as negative.
+            fp += 0
+            fn += 1
+            tn += 0
+
+    total = len(references)
+    accuracy = tp / total if total else 0.0
+    precision = tp / (tp + fp) if (tp + fp) else 0.0
+    recall = tp / (tp + fn) if (tp + fn) else 0.0
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
+
+    return {
+        "total": total,
+        "accuracy": accuracy,
+        "precision": precision,
+        "recall": recall,
+        "f1": f1,
+        "confusion_matrix": {
+            "tp": tp,
+            "fp": fp,
+            "fn": fn,
+            "tn": tn,
+        },
+    }
+
+
+def collect(environment, trajectorys, agent, inputs_id, attention_mask, source, target=None):
     """Collect evaluation trajectory."""
     answers_outs = []
     trajectory = {}
@@ -182,6 +250,7 @@ def collect(environment, trajectorys, agent, inputs_id, attention_mask, source):
     trajectory["question"] = source
     trajectory['answers'] = answers_outs
     trajectory['final_answer'] = answers_outs[-1] if answers_outs else ""
+    trajectory['reference'] = target or ""
     
     # Convert action sequence to list
     action_list = []

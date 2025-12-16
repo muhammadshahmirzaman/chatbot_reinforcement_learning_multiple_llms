@@ -62,7 +62,7 @@ class Environment:
         
         # Model registry for accessing LLMs
         self.model_registry = model_registry
-        self.model_names = model_registry.list_models()
+        self.model_names = model_registry.get_available_models()
         
         # Configuration
         self.state_device = state_device
@@ -205,7 +205,12 @@ class LegacyEnvironment:
         self.target = None
         self.state_s = None
         self.attention_masks_e = None
-        self.actor = actor.to('cuda:0')
+        try:
+            import torch
+            device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+        except ImportError:
+            device = 'cpu'
+        self.actor = actor.to(device)
         self.state = None
         self.action_sequence = []
         self.ifinit = True

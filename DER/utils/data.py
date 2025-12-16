@@ -1,9 +1,10 @@
 
 
 
+import os
 import torch
 import json
-from transformers import DebertaV2Tokenizer, AutoTokenizer
+from transformers import AutoTokenizer
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, data):
         self.data = data
@@ -33,17 +34,34 @@ class Dataset(torch.utils.data.Dataset):
 
 
 def load_data(data_path, args, max_size=None):
-    # random.seed(args.seed)
+    """
+    Load jsonl/json data with a couple of helpful checks:
+    - Resolve alternative filenames (e.g. *_1.jsonl) if the requested path
+      does not exist.
+    - Fail fast with a clear error when no examples are found.
+    """
     assert data_path, "data_path is not specified"
-    print("Loading data from {}".format(data_path))
-    if data_path.endswith('.jsonl'):
-        with open(data_path) as f:
-            data = [json.loads(line) for line in f.readlines()]
-    elif data_path.endswith('.json0127'):
-        with open(data_path, 'r') as fin:
+
+    resolved_path = data_path
+    if not os.path.exists(resolved_path):
+        # Common typo: missing `_1` suffix in the provided datasets
+        candidate = data_path.replace(".jsonl", "_1.jsonl")
+        if os.path.exists(candidate):
+            resolved_path = candidate
+        else:
+            raise FileNotFoundError(f"Data file not found: {data_path}")
+
+    print(f"Loading data from {resolved_path}")
+
+    if resolved_path.endswith('.jsonl'):
+        with open(resolved_path, encoding="utf-8") as f:
+            data = [json.loads(line) for line in f if line.strip()]
+    elif resolved_path.endswith('.json0127') or resolved_path.endswith('.json'):
+        with open(resolved_path, 'r', encoding="utf-8") as fin:
             data = json.load(fin)
     else:
-        raise ValueError("Unknown data")
+        raise ValueError(f"Unknown data format for {resolved_path}")
+
     if max_size is not None and max_size > 0:
         data = data[:max_size]
     examples = []
@@ -73,6 +91,9 @@ def load_data(data_path, args, max_size=None):
             new_item['output'] = ''
             
         examples.append(new_item)
+    if not examples:
+        raise ValueError(f"No examples loaded from {resolved_path}")
+
     return examples
 
 

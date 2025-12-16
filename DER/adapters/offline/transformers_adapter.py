@@ -58,9 +58,16 @@ class TransformersAdapter(OfflineAdapter):
         self._name = name
         self.model_path = model_name_or_path
         self.device = device
+        # Keep the config key as torch_dtype for backward compatibility, but
+        # internally store the actual torch.dtype and pass it to the modern
+        # `dtype` argument used by transformers.
         self.torch_dtype = self._get_torch_dtype(torch_dtype)
         self._estimated_memory_mb = estimated_memory_mb
         self.trust_remote_code = trust_remote_code
+        # Disable quantization flags automatically when on CPU
+        if device.startswith("cpu"):
+            load_in_4bit = False
+            load_in_8bit = False
         self.load_in_4bit = load_in_4bit
         self.load_in_8bit = load_in_8bit
         
@@ -101,11 +108,11 @@ class TransformersAdapter(OfflineAdapter):
             trust_remote_code=self.trust_remote_code
         )
         
-        # Prepare quantization config
+        # Prepare quantization config (disabled on CPU)
         quantization_config = None
-        if self.load_in_4bit or self.load_in_8bit:
-            if not TORCH_AVAILABLE:
-                logger.warning("Torch not available, skipping quantization config")
+        if device.startswith("cuda") and (self.load_in_4bit or self.load_in_8bit):
+            if not TORCH_AVAILABLE or not torch.cuda.is_available():
+                logger.warning("CUDA not available, disabling quantization")
             else:
                 try:
                     from transformers import BitsAndBytesConfig
@@ -115,19 +122,25 @@ class TransformersAdapter(OfflineAdapter):
                         bnb_4bit_compute_dtype=torch.float16 if self.load_in_4bit else None
                     )
                 except ImportError:
-                    logger.warning("Could not import BitsAndBytesConfig")
+                    logger.warning("Could not import BitsAndBytesConfig; quantization disabled")
 
         # Handle device_map for GPU vs CPU
+        dtype = self.torch_dtype
+        # Force float32 on CPU if the configured dtype is float16 (better compatibility)
+        if TORCH_AVAILABLE and torch is not None and device == "cpu" and dtype == torch.float16:
+            dtype = torch.float32
+        dtype_kwarg = {"dtype": dtype}
+
         if device == "cpu":
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_path,
-                torch_dtype=self.torch_dtype,
+                **dtype_kwarg,
                 trust_remote_code=self.trust_remote_code
             ).cpu()
         else:
             # Arguments for from_pretrained
             kwargs = {
-                "torch_dtype": self.torch_dtype,
+                **dtype_kwarg,
                 "device_map": device,
                 "trust_remote_code": self.trust_remote_code,
             }

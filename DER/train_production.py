@@ -96,15 +96,15 @@ def print_statistics_dashboard(stats_before, stats_after, training_time, model_s
     print("="*80)
     
     # Training Summary
-    print("\n📊 TRAINING SUMMARY")
+    print("\nTRAINING SUMMARY")
     print("-" * 80)
-    print(f"  Status: {'✅ SUCCESS' if training_success else '❌ FAILED'}")
+    print(f"  Status: {'SUCCESS' if training_success else 'FAILED'}")
     print(f"  Duration: {training_time:.2f} seconds ({training_time/60:.2f} minutes)")
     print(f"  Started: {stats_before['timestamp']}")
     print(f"  Ended: {stats_after['timestamp']}")
     
     # GPU Statistics
-    print("\n🎮 GPU STATISTICS")
+    print("\nGPU STATISTICS")
     print("-" * 80)
     if stats_after['gpu'].get('available'):
         gpu = stats_after['gpu']
@@ -114,10 +114,10 @@ def print_statistics_dashboard(stats_before, stats_after, training_time, model_s
         print(f"  Peak Memory Usage: {gpu.get('max_memory_allocated_gb', 0):.2f} GB")
         print(f"  Utilization: {(gpu.get('memory_allocated_gb', 0) / 24 * 100):.1f}% (assuming 24GB GPU)")
     else:
-        print("  Status: ❌ No GPU available (training on CPU)")
+        print("  Status: No GPU available (training on CPU)")
     
     # CPU & Memory Statistics
-    print("\n💻 CPU & MEMORY STATISTICS")
+    print("\nCPU & MEMORY STATISTICS")
     print("-" * 80)
     if isinstance(stats_after['cpu'].get('percent'), (int, float)):
         print(f"  CPU Usage: {stats_after['cpu']['percent']:.1f}%")
@@ -131,7 +131,7 @@ def print_statistics_dashboard(stats_before, stats_after, training_time, model_s
         print(f"  RAM Usage: {mem.get('percent', 0):.1f}%")
     
     # Model Status
-    print("\n🤖 MODEL STATUS")
+    print("\nMODEL STATUS")
     print("-" * 80)
     if model_status:
         running_count = 0
@@ -139,13 +139,13 @@ def print_statistics_dashboard(stats_before, stats_after, training_time, model_s
         
         for model_name, status in model_status.items():
             if 'Error' in status.get('status', ''):
-                symbol = "❌"
+                symbol = "ERROR"
                 error_count += 1
             elif status.get('status') == 'Ready':
-                symbol = "✅"
+                symbol = "READY"
                 running_count += 1
             else:
-                symbol = "⚠️"
+                symbol = "WARN"
             
             model_type = status.get('type', 'Unknown')
             model_status_text = status.get('status', 'Unknown')
@@ -154,10 +154,10 @@ def print_statistics_dashboard(stats_before, stats_after, training_time, model_s
         print(f"\n  Total Models: {len(model_status)}")
         print(f"  Ready: {running_count} | Errors: {error_count}")
     else:
-        print("  ⚠️ No model status available")
+        print("  No model status available")
     
     # Performance Metrics
-    print("\n📈 PERFORMANCE METRICS")
+    print("\nPERFORMANCE METRICS")
     print("-" * 80)
     
     # Check for checkpoints
@@ -201,7 +201,7 @@ def main():
     args = parser.parse_args()
     
     # Collect statistics before training
-    print("\n📊 Collecting system statistics...")
+    print("\nCollecting system statistics...")
     stats_before = get_system_stats()
     model_status = check_model_status()
     
@@ -214,11 +214,11 @@ def main():
             "--download", "--verify"
         ])
         if result.returncode != 0:
-            print("\n✗ Model setup failed!")
+            print("\nModel setup failed!")
             print_statistics_dashboard(stats_before, get_system_stats(), 0, model_status, False)
             return 1
         
-        print("\n✓ Models ready!")
+        print("\nModels ready!")
     
     training_success = False
     training_time = 0
@@ -290,12 +290,12 @@ def main():
     
     if training_success:
         print("\n" + "="*80)
-        print("✓ TRAINING COMPLETED SUCCESSFULLY!")
+        print("TRAINING COMPLETED SUCCESSFULLY!")
         print("="*80)
         print("\nCheckpoints saved in: ./checkpoints/")
     else:
         print("\n" + "="*80)
-        print("✗ TRAINING FAILED")
+        print("TRAINING FAILED")
         print("="*80)
     
     return result.returncode

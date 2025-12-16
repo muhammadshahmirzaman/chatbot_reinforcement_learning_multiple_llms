@@ -1,7 +1,18 @@
 
-import bert_score
-from bert_score import BERTScorer
+import os
 import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# BERTScore imports guarded to avoid hard failures during import.
+try:
+    import bert_score
+    from bert_score import BERTScorer
+    BERTSCORE_AVAILABLE = True
+except Exception as e:  # broad to catch missing deps
+    bert_score = None
+    BERTScorer = None
+    BERTSCORE_AVAILABLE = False
+
 from utils.bart_score import BARTScorer
 try:
     from bleurt import score
@@ -9,8 +20,6 @@ try:
 except ImportError:
     score = None
     BLEURT_AVAILABLE = False
-import os
-from transformers import AutoTokenizer, AutoModelForCausalLM
 
 class Bert_calculate:
     def __init__(self, device=None):
@@ -20,22 +29,46 @@ class Bert_calculate:
         self.device = device if device else ('cuda' if torch.cuda.is_available() else 'cpu')
 
     def load_weight(self):
+        """Load BERTScore weights with safe CPU-first defaults."""
+        if not BERTSCORE_AVAILABLE:
+            print("BERTScore is not installed; rewards will be zero.")
+            self.tokenizer = None
+            self.scorer = None
+            return
+
         print(f"loading pretrained bertscore on {self.device}...")
-        try:
-            # Try loading normally (will download if needed)
-            self.tokenizer = bert_score.utils.get_tokenizer(model_type="bert-base-multilingual-cased")
-            self.scorer = BERTScorer(lang="en", device=self.device, model_type="bert-base-multilingual-cased")
-        except Exception as e:
-            print(f"Error loading BERTScore: {e}")
-            print("Attempting to use bert-base-uncased as fallback...")
+
+        preferred_model = "bert-base-multilingual-cased"
+        fallback_model = "bert-base-uncased"
+
+        def _model_exists_locally(model_name: str) -> bool:
+            return os.path.isdir(model_name) and bool(os.listdir(model_name))
+
+        # Prefer HF download unless a local directory truly exists with files.
+        model_candidates = [preferred_model, fallback_model]
+
+        for model_name in model_candidates:
             try:
-                self.tokenizer = bert_score.utils.get_tokenizer(model_type="bert-base-uncased")
-                self.scorer = BERTScorer(lang="en", device=self.device, model_type="bert-base-uncased")
-            except Exception as e2:
-                print(f"Fallback failed: {e2}")
-                # Create dummy scorer that returns 0 if everything fails
-                self.tokenizer = None
-                self.scorer = None
+                # Only treat as local if a non-empty directory is present.
+                force_local = _model_exists_locally(model_name)
+                if force_local:
+                    print(f"Using local BERTScore model at {model_name}")
+                self.tokenizer = bert_score.utils.get_tokenizer(model_type=model_name)
+                self.scorer = BERTScorer(
+                    lang="en",
+                    device=self.device,
+                    model_type=model_name,
+                    use_fast=True
+                )
+                return
+            except Exception as e:
+                print(f"BERTScore load failed for {model_name}: {e}")
+                continue
+
+        # Final fallback: disable scorer gracefully
+        print("BERTScore could not be loaded; rewards will be zero.")
+        self.tokenizer = None
+        self.scorer = None
 
     def bertscore_calculate(self, candidates, references, batchsize):
         if self.scorer is None:
@@ -72,9 +105,9 @@ class Bart_calculate:
         self.bart_scorer = None
 
     def load_weight(self):
-        print("loading pretrained bartscore...")
-        self.bart_scorer = BARTScorer(device='cuda:2', checkpoint='./bart-large-cnn')
-        self.bart_scorer.load(path='./bart_score/bart_score.pth')
+        # Keep BartScore disabled in CPU-only flows to avoid GPU dependency.
+        print("BartScore loading skipped on CPU-only setup.")
+        self.bart_scorer = None
         
     def calculate_bart_score(self, candidate, reference):
         torch.cuda.empty_cache()

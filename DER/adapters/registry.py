@@ -89,7 +89,20 @@ class ModelRegistry:
         
         # For offline models, ensure they're loaded
         if isinstance(adapter, OfflineAdapter):
-            self.resource_manager.ensure_loaded(adapter)
+            target_device = getattr(adapter, "device", "cpu")
+            # Default to CPU if CUDA is unavailable or explicitly requested
+            if target_device.startswith("cuda"):
+                try:
+                    import torch
+                    if not torch.cuda.is_available():
+                        target_device = "cpu"
+                except ImportError:
+                    target_device = "cpu"
+            try:
+                self.resource_manager.ensure_loaded(adapter, device=target_device)
+            except Exception as e:
+                logger.error(f"Failed to load adapter '{name}' to {target_device}: {e}")
+                return None
         
         return adapter
     
