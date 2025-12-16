@@ -51,7 +51,7 @@ DER/bleurt/
 DER/model_pth2/
 
 # Generated Datasets (can be recreated from parquet)
-datasets/*.jsonl
+# datasets/*.jsonl
 
 # Optional: Ignore large parquet files if they are backed up elsewhere
 # datasets/*.parquet
