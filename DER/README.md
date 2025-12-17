@@ -54,6 +54,12 @@ python train_ppo_multi.py
 python test_ppo_multi.py
 ```
 
+## 📊 Model Evaluation
+Evaluate all available models on a test dataset:
+```bash
+python run_all_models_evaluation.py --data ./test_data_mini.jsonl --device cpu --max_examples 50
+```
+
 
 ## 🙏 Acknowledgements
 Thanks for the open-source code of [Tianshou](https://github.com/thu-ml/tianshou).
