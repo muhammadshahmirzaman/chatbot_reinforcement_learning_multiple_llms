@@ -1,0 +1,8 @@
+NLP METRICS REPORT
+OVERALL:
+bert_f1: -0.1812
+bleu: 0.0000
+rougeL: 0.0000
+
+PER MODEL:
+chatglm-6B: Count=3, BERT=-0.1812, BLEU=0.0000

@@ -108,26 +108,26 @@ class PPO:
             old_values_bs = []
             for traj in sampled_trajs:
                 states_bs.extend(traj['states'])
-                rewards_bs.extend([torch.tensor(value).to(device) for value in traj['rewards']])
+                rewards_bs.extend([torch.tensor(value, dtype=torch.float32).to(device) for value in traj['rewards']])
                 old_action_pros_bs.extend(traj['old_action_pros'])
                 actions_bs.extend(traj['actions'])
                 attention_masks_bs.extend(traj['attention_masks'])
                 old_values_bs.extend(traj['old_values'])
             states_bst = torch.stack(states_bs)
-            old_action_pros_bst = torch.stack(old_action_pros_bs)
+            old_action_pros_bst = torch.stack(old_action_pros_bs).float()
             actions_bst = torch.stack(actions_bs)
             attention_masks_bst = torch.stack(attention_masks_bs)
-            old_values_bst = torch.squeeze(torch.stack(old_values_bs), dim=2)
+            old_values_bst = torch.squeeze(torch.stack(old_values_bs), dim=2).float()
 
             rewards_bst = torch.stack(rewards_bs)
 
-            new_values = self.critic(states_bst, attention_masks_bst)
+            new_values = self.critic(states_bst, attention_masks_bst).float()
 
             logit = self.actor(states_bst, attention_masks_bst)
             dist = Categorical(logits=logit)
-            new_probs = dist.log_prob(actions_bst)
+            new_probs = dist.log_prob(actions_bst).float()
 
-            returns = self.get_returns(rewards_bst, device)
+            returns = self.get_returns(rewards_bst, device).float()
             advantages = returns - old_values_bst
 
             ratio = torch.exp(new_probs-old_action_pros_bst)
@@ -142,6 +142,7 @@ class PPO:
             critic_loss.backward()
             self.optimizer_actor.step()
             self.optimizer_critic.step()
+
 
 
 

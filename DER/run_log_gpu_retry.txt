@@ -1,0 +1,103 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO:__main__:Device: cuda:0, Available GPUs: 1
+INFO:__main__:Loading model registry from ./config/models_production.yaml
+INFO:adapters.registry:Registered model 'opt-125m' (offline)
+INFO:adapters.registry:Registered model 'cached-baseline' (offline)
+INFO:__main__:Loaded 2 models: ['opt-125m', 'cached-baseline']
+INFO:__main__:Starting training for 1 epochs
+
+Epoch 1/1:   0%|          | 0/2 [00:00<?, ?it/s]INFO:adapters.resource_manager:Loading model 'opt-125m' to cuda
+INFO:adapters.offline.transformers_adapter:Loading opt-125m from ./opt-125m to cuda
+INFO:adapters.resource_manager:Loading model 'opt-125m' to cuda
+INFO:adapters.offline.transformers_adapter:Loading opt-125m from ./opt-125m to cuda
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO:adapters.offline.transformers_adapter:Successfully loaded opt-125m
+INFO:adapters.resource_manager:Loading model 'cached-baseline' to cuda
+INFO:adapters.offline.cached_adapter:No cache file found at cache\baseline_responses.json, starting fresh
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+Some weights of OPTForCausalLM were not initialized from the model checkpoint at ./opt-125m and are newly initialized: ['lm_head.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+INFO:adapters.offline.transformers_adapter:Successfully loaded opt-125m
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+Token indices sequence length is longer than the specified maximum sequence length for this model (524 > 512). Running this sequence through the model will result in indexing errors
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+
+Epoch 1/1:   0%|          | 0/2 [00:28<?, ?it/s]
+Traceback (most recent call last):
+  File "C:\Users\Default\Desktop\multiple_llms\chatbot_reinforcement_learning_multiple_llms\DER\train_ppo_multi.py", line 344, in <module>
+    main(args)
+  File "C:\Users\Default\Desktop\multiple_llms\chatbot_reinforcement_learning_multiple_llms\DER\train_ppo_multi.py", line 175, in main
+    ppo_agent.update(trajectorys, args.per_batch_size, args.sample_size, device, wandb)
+  File "C:\Users\Default\Desktop\multiple_llms\chatbot_reinforcement_learning_multiple_llms\DER\ppo_discreate.py", line 142, in update
+    critic_loss.backward()
+  File "C:\ProgramData\anaconda3\envs\chat\Lib\site-packages\torch\_tensor.py", line 626, in backward
+    torch.autograd.backward(
+  File "C:\ProgramData\anaconda3\envs\chat\Lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "C:\ProgramData\anaconda3\envs\chat\Lib\site-packages\torch\autograd\graph.py", line 823, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Found dtype Half but expected Float
+
+ERROR conda.cli.main_run:execute(127): `conda run python train_production.py --quick-test --device cuda:0` failed. (See above for error)
+Loading data from ./test_data_mini.jsonl
+loading pretrained bertscore on cuda:0...
+loading KTP model (opt-125m)...
+
+📊 Collecting system statistics...
+
+================================================================================
+RUNNING QUICK TEST
+================================================================================
+
+Command: C:\ProgramData\anaconda3\envs\chat\python.exe train_ppo_multi.py --model_config ./config/models_production.yaml --train_data_path ./test_data_mini.jsonl --epochs 1 --batch_size 2 --max_train_data_size 5 --device cuda:0 --thread_nums 2
+
+
+================================================================================
+                         TRAINING STATISTICS DASHBOARD
+================================================================================
+
+📊 TRAINING SUMMARY
+--------------------------------------------------------------------------------
+  Status: [FAIL] FAILED
+  Duration: 44.50 seconds (0.74 minutes)
+  Started: 2025-12-15 11:51:44
+  Ended: 2025-12-15 11:52:34
+
+🎮 GPU STATISTICS
+--------------------------------------------------------------------------------
+  Device: NVIDIA GeForce RTX 4060
+  Memory Allocated: 0.00 GB
+  Memory Reserved: 0.24 GB
+  Peak Memory Usage: 0.23 GB
+  Utilization: 0.0% (assuming 24GB GPU)
+
+💻 CPU & MEMORY STATISTICS
+--------------------------------------------------------------------------------
+  CPU Usage: 6.9%
+  CPU Cores: 12
+  RAM Used: 6.47 GB / 15.84 GB
+  RAM Usage: 40.8%
+
+🤖 MODEL STATUS
+--------------------------------------------------------------------------------
+  [OK] opt-125m             [TransformersAdapter ] Ready
+  [OK] cached-baseline      [CachedAdapter       ] Ready
+
+  Total Models: 2
+  Ready: 2 | Errors: 0
+
+📈 PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+  Checkpoints Created: 0 (directory not found)
+
+================================================================================
+                            END OF STATISTICS
+================================================================================
+
+
+================================================================================
+[FAIL] TRAINING FAILED
+================================================================================
+

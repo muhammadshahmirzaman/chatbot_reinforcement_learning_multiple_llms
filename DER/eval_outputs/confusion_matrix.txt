@@ -1,0 +1,9 @@
+Accuracy: 0.0000
+
+Labels: ['2+2 equals 4.', 'Machine learning is a subset of AI that enables systems to learn from data.', 'Paris is the capital of France.', "[ERROR: No module named 'openai']"]
+
+Matrix:
+0 0 0 1
+0 0 0 1
+0 0 0 1
+0 0 0 0

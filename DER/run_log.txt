@@ -1,0 +1,79 @@
+INFO:__main__:Device: cpu, Available GPUs: 1
+INFO:__main__:Loading model registry from ./config/models.yaml
+INFO:adapters.registry:Registered model 'koala-7B-HF' (online)
+INFO:adapters.registry:Registered model 'Vicuna-13B' (online)
+INFO:adapters.registry:Registered model 'alpaca-13B' (online)
+INFO:adapters.registry:Registered model 'dolly-12B' (online)
+INFO:adapters.registry:Registered model 'baize-13B' (online)
+INFO:adapters.registry:Registered model 'stablelm-7B' (online)
+INFO:adapters.registry:Registered model 'mpt-7B' (online)
+INFO:adapters.registry:Registered model 'OpenAssistant-12B' (online)
+INFO:adapters.registry:Registered model 't5-xxl' (online)
+INFO:adapters.registry:Registered model 'moss' (online)
+INFO:adapters.registry:Registered model 'chatglm-6B' (online)
+INFO:__main__:Loaded 11 models: ['koala-7B-HF', 'Vicuna-13B', 'alpaca-13B', 'dolly-12B', 'baize-13B', 'stablelm-7B', 'mpt-7B', 'OpenAssistant-12B', 't5-xxl', 'moss', 'chatglm-6B']
+INFO:__main__:Loading KTP engine...
+INFO:__main__:Loading actor from None
+WARNING:__main__:No actor checkpoint provided or found, using random initialization
+INFO:__main__:Loading critic from None
+WARNING:__main__:No critic checkpoint provided, using random initialization
+INFO:__main__:Dataset size: 3
+
+Evaluating:   0%|          | 0/2 [00:00<?, ?it/s]ERROR:adapters.online.api_adapter:API generation failed for moss: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for moss: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+
+Evaluating:  50%|█████     | 1/2 [00:18<00:18, 18.06s/it]ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for chatglm-6B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+
+Evaluating: 100%|██████████| 2/2 [00:26<00:00, 12.64s/it]
+Evaluating: 100%|██████████| 2/2 [00:26<00:00, 13.45s/it]
+INFO:__main__:Saving 3 results to eval_outputs\evaluation_results_cm.jsonl
+INFO:__main__:Evaluation complete!
+INFO:__main__:Average steps per question: 5.00
+INFO:__main__:Computing Confusion Matrix...
+INFO:__main__:Number of unique labels: 4
+WARNING:__main__:scikit-learn not installed. Using manual calculation.
+INFO:__main__:Confusion matrix saved to eval_outputs\confusion_matrix.txt
+
+Loading data from test_data_mini.jsonl
+loading pretrained bertscore on cpu...
+loading KTP model (opt-125m)...
+
+============================================================
+CONFUSION MATRIX (Accuracy: 0.00%)
+============================================================
+         True \ Pred | 2+2 equals | Machine le | Paris is t | [ERROR: No
+------------------------------------------------------------------------
+       2+2 equals 4. |          0 |          0 |          0 |          1
+Machine learning is  |          0 |          0 |          0 |          1
+Paris is the capital |          0 |          0 |          0 |          1
+[ERROR: No module na |          0 |          0 |          0 |          0
+============================================================
+
+

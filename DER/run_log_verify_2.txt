@@ -1,0 +1,125 @@
+
+# >>>>>>>>>>>>>>>>>>>>>> ERROR REPORT <<<<<<<<<<<<<<<<<<<<<<
+
+    Traceback (most recent call last):
+      File "C:\ProgramData\anaconda3\Lib\site-packages\conda\exception_handler.py", line 28, in __call__
+        return func(*args, **kwargs)
+      File "C:\ProgramData\anaconda3\Lib\site-packages\conda\cli\main.py", line 61, in main_subshell
+        exit_code = do_call(args, parser)
+      File "C:\ProgramData\anaconda3\Lib\site-packages\conda\cli\conda_argparse.py", line 206, in do_call
+        result = getattr(module, func_name)(args, parser)
+      File "C:\ProgramData\anaconda3\Lib\site-packages\conda\cli\main_run.py", line 120, in execute
+        print(response.stdout, file=sys.stdout)
+        ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      File "C:\ProgramData\anaconda3\Lib\encodings\cp1252.py", line 19, in encode
+        return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    UnicodeEncodeError: 'charmap' codec can't encode character '\ufffd' in position 927: character maps to <undefined>
+
+`$ C:\ProgramData\anaconda3\Scripts\conda-script.py run -n chat python -u train_production.py --quick-test --device cpu`
+
+  environment variables:
+     BUNDLED_DEBUGPY_PATH=c:\Users\mehar\.antigravity\extensions\ms-
+                          python.debugpy-2025.14.1-win32-x64\bundled\libs\debugpy
+                 CIO_TEST=<not set>
+    CONDA_ALLOW_SOFTLINKS=false
+        CONDA_DEFAULT_ENV=base
+                CONDA_EXE=C:\ProgramData\anaconda3\Scripts\conda.exe
+               CONDA_EXES="C:\ProgramData\anaconda3\Scripts\conda.exe"
+             CONDA_PREFIX=C:\ProgramData\anaconda3
+    CONDA_PROMPT_MODIFIER=(base)
+         CONDA_PYTHON_EXE=C:\ProgramData\anaconda3\python.exe
+               CONDA_ROOT=C:\ProgramData\anaconda3
+              CONDA_SHLVL=1
+                CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6
+           CURL_CA_BUNDLE=<not set>
+                 HOMEPATH=\Users\mehar
+               LD_PRELOAD=<not set>
+          NVTOOLSEXT_PATH=C:\Program Files\NVIDIA Corporation\NvToolsExt\
+                     PATH=C:\ProgramData\anaconda3;C:\ProgramData\anaconda3\Library\mingw-
+                          w64\bin;C:\ProgramData\anaconda3\Library\usr\bin;C:\ProgramData\anacon
+                          da3\Library\bin;C:\ProgramData\anaconda3\Scripts;C:\ProgramData\anacon
+                          da3\bin;C:\ProgramData\anaconda3\condabin;C:\Program Files\NVIDIA GPU
+                          Computing Toolkit\CUDA\v12.6\bin;C:\Program Files\NVIDIA GPU Computing
+                          Toolkit\CUDA\v12.6\libnvvp;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\S
+                          ystem32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\Sys
+                          tem32\OpenSSH;C:\Program Files\Docker\Docker\resources\bin;C:\Users\me
+                          har\anaconda3;C:\Users\mehar\anaconda3\Scripts;C:\Users\mehar\anaconda
+                          3\Library\bin;C:\Program Files\CMake\bin;C:\Program Files (x86)\NVIDIA
+                          Corporation\PhysX\Common;C:\Program Files\NVIDIA GPU Computing
+                          Toolkit\CUDA\v11.8\bin;C:\Program Files\NVIDIA Corporation\Nsight
+                          Compute 2024.3.0;C:\Program Files\NVIDIA Corporation\NVIDIA
+                          NvDLISR;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Users\meha
+                          r\AppData\Local\Microsoft\WindowsApps;C:\Users\mehar\ffmpeg-master-
+                          latest-win64-gpl-shared\ffmpeg-master-latest-win64-gpl-shared\bin;C:\U
+                          sers\mehar\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microso
+                          ft.Winget.Source_8wekyb3d8bbwe\ffmpeg-7.1.1-
+                          full_build\bin;C:\Users\mehar\AppData\Roaming\npm;C:\Users\mehar\AppDa
+                          ta\Local\Programs\Microsoft VS Code\bin;C:\ProgramData\anaconda3;C:\Pr
+                          ogramData\anaconda3\Scripts;C:\ProgramData\anaconda3\Library\bin;C:\Us
+                          ers\mehar\OneDrive\Desktop\shahmir\bin;C:\Users\mehar\AppData\Roaming\
+                          Python\Python310\Scripts;c:\Users\mehar\.antigravity\extensions\ms-
+                          python.debugpy-2025.14.1-win32-x64\bundled\scripts\noConfigScripts
+             PSMODULEPATH=C:\Users\mehar\Documents\WindowsPowerShell\Modules;C:\Program Files\Wi
+                          ndowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Mod
+                          ules
+            PYTHONSTARTUP=c:\Users\mehar\AppData\Roaming\Antigravity\User\workspaceStorage\11038
+                          570c81030329fedc3d697827684\ms-python.python\pythonrc.py
+        PYTHON_BASIC_REPL=1
+       REQUESTS_CA_BUNDLE=<not set>
+            SSL_CERT_FILE=C:\ProgramData\anaconda3\Library\ssl\cacert.pem
+
+     active environment : base
+    active env location : C:\ProgramData\anaconda3
+            shell level : 1
+       user config file : C:\Users\mehar\.condarc
+ populated config files : C:\ProgramData\anaconda3\.condarc
+                          C:\Users\mehar\.condarc
+          conda version : 25.5.1
+    conda-build version : 25.5.0
+         python version : 3.13.5.final.0
+                 solver : libmamba (default)
+       virtual packages : __archspec=1=skylake
+                          __conda=25.5.1=0
+                          __cuda=12.6=0
+                          __win=10.0.26200=0
+       base environment : C:\ProgramData\anaconda3  (writable)
+      conda av data dir : C:\ProgramData\anaconda3\etc\conda
+  conda av metadata url : None
+           channel URLs : https://conda.anaconda.org/nvidia/win-64
+                          https://conda.anaconda.org/nvidia/noarch
+                          https://conda.anaconda.org/pytorch/win-64
+                          https://conda.anaconda.org/pytorch/noarch
+                          https://repo.anaconda.com/pkgs/main/win-64
+                          https://repo.anaconda.com/pkgs/main/noarch
+                          https://repo.anaconda.com/pkgs/r/win-64
+                          https://repo.anaconda.com/pkgs/r/noarch
+                          https://repo.anaconda.com/pkgs/msys2/win-64
+                          https://repo.anaconda.com/pkgs/msys2/noarch
+          package cache : C:\ProgramData\anaconda3\pkgs
+                          C:\Users\mehar\.conda\pkgs
+                          C:\Users\mehar\AppData\Local\conda\conda\pkgs
+       envs directories : C:\ProgramData\anaconda3\envs
+                          C:\Users\mehar\.conda\envs
+                          C:\Users\mehar\AppData\Local\conda\conda\envs
+               platform : win-64
+             user-agent : conda/25.5.1 requests/2.32.5 CPython/3.13.5 Windows/11 Windows/10.0.26200 solver/libmamba conda-libmamba-solver/25.4.0 libmambapy/2.0.5
+          administrator : True
+             netrc file : None
+           offline mode : False
+
+
+An unexpected error has occurred. Conda has prepared the above report.
+If you suspect this error is being caused by a malfunctioning plugin,
+consider using the --no-plugins option to turn off plugins.
+
+Example: conda --no-plugins install <package>
+
+Alternatively, you can set the CONDA_NO_PLUGINS environment variable on
+the command line to run the command without plugins enabled.
+
+Example: CONDA_NO_PLUGINS=true conda install <package>
+
+If submitted, this report will be used by core maintainers to improve
+future releases of conda.
+Would you like conda to send this report to the core maintainers? [y/N]: 

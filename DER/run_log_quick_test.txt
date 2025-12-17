@@ -1,0 +1,33 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading checkpoint shards:   0%|          | 0/8 [00:00<?, ?it/s]
+Loading checkpoint shards:  12%|█▎        | 1/8 [00:05<00:39,  5.68s/it]
+Loading checkpoint shards:  25%|██▌       | 2/8 [00:18<00:58,  9.67s/it]
+Loading checkpoint shards:  38%|███▊      | 3/8 [00:30<00:55, 11.11s/it]
+Loading checkpoint shards:  50%|█████     | 4/8 [00:53<01:01, 15.48s/it]
+Loading checkpoint shards:  62%|██████▎   | 5/8 [01:09<00:47, 15.90s/it]
+Loading checkpoint shards:  75%|███████▌  | 6/8 [01:28<00:33, 16.90s/it]
+Loading checkpoint shards:  88%|████████▊ | 7/8 [01:38<00:14, 14.74s/it]
+Loading checkpoint shards: 100%|██████████| 8/8 [01:45<00:00, 12.01s/it]
+Loading checkpoint shards: 100%|██████████| 8/8 [01:45<00:00, 13.14s/it]
+Traceback (most recent call last):
+  File "C:\Users\Default\Desktop\multiple_llms\chatbot_reinforcement_learning_multiple_llms\DER\train_ppo_multi.py", line 19, in <module>
+    import torch
+  File "C:\ProgramData\anaconda3\envs\chat\Lib\site-packages\torch\__init__.py", line 274, in <module>
+    _load_dll_libraries()
+  File "C:\ProgramData\anaconda3\envs\chat\Lib\site-packages\torch\__init__.py", line 257, in _load_dll_libraries
+    raise err
+OSError: [WinError 1455] The paging file is too small for this operation to complete. Error loading "C:\ProgramData\anaconda3\envs\chat\Lib\site-packages\torch\lib\cufft64_11.dll" or one of its dependencies.
+
+Loading checkpoint shards:   0%|          | 0/8 [00:00<?, ?it/s]
+ERROR conda.cli.main_run:execute(127): `conda run python train_production.py --quick-test --device cpu` failed. (See above for error)
+
+📊 Collecting system statistics...
+
+================================================================================
+RUNNING QUICK TEST
+================================================================================
+
+Command: C:\ProgramData\anaconda3\envs\chat\python.exe train_ppo_multi.py --model_config ./config/models_production.yaml --train_data_path ./test_data_mini.jsonl --epochs 1 --batch_size 2 --max_train_data_size 5 --device cpu --thread_nums 2
+
+

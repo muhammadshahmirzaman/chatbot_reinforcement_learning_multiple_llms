@@ -1,0 +1,108 @@
+INFO:__main__:Device: cpu, Available GPUs: 1
+'(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 4e07727d-5152-4448-9a7d-a749e67fae9c)')' thrown while requesting HEAD https://huggingface.co/roberta-large/resolve/main/tokenizer.json
+WARNING:huggingface_hub.utils._http:'(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 4e07727d-5152-4448-9a7d-a749e67fae9c)')' thrown while requesting HEAD https://huggingface.co/roberta-large/resolve/main/tokenizer.json
+Retrying in 1s [Retry 1/5].
+WARNING:huggingface_hub.utils._http:Retrying in 1s [Retry 1/5].
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+WARNING:huggingface_hub.file_download:Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+INFO:__main__:Loading model registry from ./config/models.yaml
+INFO:adapters.registry:Registered model 'koala-7B-HF' (online)
+INFO:adapters.registry:Registered model 'Vicuna-13B' (online)
+INFO:adapters.registry:Registered model 'alpaca-13B' (online)
+INFO:adapters.registry:Registered model 'dolly-12B' (online)
+INFO:adapters.registry:Registered model 'baize-13B' (online)
+INFO:adapters.registry:Registered model 'stablelm-7B' (online)
+INFO:adapters.registry:Registered model 'mpt-7B' (online)
+INFO:adapters.registry:Registered model 'OpenAssistant-12B' (online)
+INFO:adapters.registry:Registered model 't5-xxl' (online)
+INFO:adapters.registry:Registered model 'moss' (online)
+INFO:adapters.registry:Registered model 'chatglm-6B' (online)
+INFO:__main__:Loaded 11 models: ['koala-7B-HF', 'Vicuna-13B', 'alpaca-13B', 'dolly-12B', 'baize-13B', 'stablelm-7B', 'mpt-7B', 'OpenAssistant-12B', 't5-xxl', 'moss', 'chatglm-6B']
+INFO:__main__:Loading KTP engine...
+INFO:__main__:Loading actor from None
+WARNING:__main__:No actor checkpoint provided or found, using random initialization
+INFO:__main__:Loading critic from None
+WARNING:__main__:No critic checkpoint provided, using random initialization
+INFO:__main__:Dataset size: 3
+
+Evaluating:   0%|          | 0/2 [00:00<?, ?it/s]ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for baize-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for baize-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for baize-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+
+Evaluating:  50%|█████     | 1/2 [00:16<00:16, 16.85s/it]ERROR:adapters.online.api_adapter:API generation failed for Vicuna-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for baize-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for baize-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for baize-13B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for moss: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+
+Evaluating: 100%|██████████| 2/2 [00:23<00:00, 11.12s/it]
+Evaluating: 100%|██████████| 2/2 [00:23<00:00, 11.98s/it]
+INFO:__main__:Saving 3 results to eval_outputs\evaluation_results_cm.jsonl
+INFO:__main__:Evaluation complete!
+INFO:__main__:Average steps per question: 5.00
+INFO:__main__:Computing Confusion Matrix...
+INFO:__main__:Number of unique labels: 4
+WARNING:__main__:scikit-learn not installed. Using manual calculation.
+INFO:__main__:Confusion matrix saved to eval_outputs\confusion_matrix.txt
+INFO:__main__:Computing Detailed Metrics Report...
+INFO:__main__:Metrics report saved to eval_outputs\metrics_report.txt
+
+Loading data from test_data_mini.jsonl
+loading pretrained bertscore on cpu...
+loading KTP model (opt-125m)...
+
+============================================================
+CONFUSION MATRIX (Accuracy: 0.00%)
+============================================================
+         True \ Pred | 2+2 equals | Machine le | Paris is t | [ERROR: No
+------------------------------------------------------------------------
+       2+2 equals 4. |          0 |          0 |          0 |          1
+Machine learning is  |          0 |          0 |          0 |          1
+Paris is the capital |          0 |          0 |          0 |          1
+[ERROR: No module na |          0 |          0 |          0 |          0
+============================================================
+
+
+================================================================================
+NLP METRICS REPORT
+================================================================================
+
+OVERALL PERFORMANCE (3 samples):
+----------------------------------------
+  Avg BERT_F1   : -0.1812
+  Avg BLEU      : 0.0000
+  Avg ROUGEL    : 0.0000
+
+PER-MODEL PERFORMANCE:
+----------------------------------------------------------------------------------------------------
+Model Name                | Count  | BERT-F1    | BLEU       | ROUGE-L   
+----------------------------------------------------------------------------------------------------
+Vicuna-13B                | 2      | -0.1998     | 0.0000     | 0.0000
+moss                      | 1      | -0.1438     | 0.0000     | 0.0000
+================================================================================
+
+

@@ -170,6 +170,7 @@ def main(args):
             
             logger.debug(f"Collected {len(trajectorys)} trajectories")
             
+            
             if len(trajectorys) < 1:
                 logger.warning("Not enough trajectories collected, skipping PPO update.")
                 save_model(actor, critic, epoch, args.save_dir)
@@ -330,7 +331,7 @@ if __name__ == '__main__':
     parser.add_argument("--model_config", type=str, default="./config/models.yaml",
                         help="Path to model configuration YAML file")
     
-    # Data config
+    # Data config will change after running
     parser.add_argument("--train_data_path", type=str, 
                         default="../datasets/train_data_prepared_1.jsonl",
                         help="Path to training data (.jsonl). Falls back to *_1 if missing.")

@@ -1,0 +1,101 @@
+INFO:__main__:Device: cuda:0, Available GPUs: 1
+Some weights of RobertaModel were not initialized from the model checkpoint at roberta-large and are newly initialized: ['pooler.dense.bias', 'pooler.dense.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+INFO:__main__:Loading model registry from ./config/models.yaml
+INFO:adapters.registry:Registered model 'koala-7B-HF' (online)
+INFO:adapters.registry:Registered model 'Vicuna-13B' (online)
+INFO:adapters.registry:Registered model 'alpaca-13B' (online)
+INFO:adapters.registry:Registered model 'dolly-12B' (online)
+INFO:adapters.registry:Registered model 'baize-13B' (online)
+INFO:adapters.registry:Registered model 'stablelm-7B' (online)
+INFO:adapters.registry:Registered model 'mpt-7B' (online)
+INFO:adapters.registry:Registered model 'OpenAssistant-12B' (online)
+INFO:adapters.registry:Registered model 't5-xxl' (online)
+INFO:adapters.registry:Registered model 'moss' (online)
+INFO:adapters.registry:Registered model 'chatglm-6B' (online)
+INFO:__main__:Loaded 11 models: ['koala-7B-HF', 'Vicuna-13B', 'alpaca-13B', 'dolly-12B', 'baize-13B', 'stablelm-7B', 'mpt-7B', 'OpenAssistant-12B', 't5-xxl', 'moss', 'chatglm-6B']
+INFO:__main__:Loading KTP engine...
+INFO:__main__:Loading actor from None
+WARNING:__main__:No actor checkpoint provided or found, using random initialization
+INFO:__main__:Loading critic from None
+WARNING:__main__:No critic checkpoint provided, using random initialization
+INFO:__main__:Dataset size: 3
+
+Evaluating:   0%|          | 0/1 [00:00<?, ?it/s]ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+ERROR:adapters.online.api_adapter:API generation failed for t5-xxl: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for koala-7B-HF: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+ERROR:adapters.online.api_adapter:API generation failed for OpenAssistant-12B: No module named 'openai'
+Warning: Empty reference sentence detected; setting raw BERTScores to 0.
+
+Evaluating: 100%|██████████| 1/1 [00:06<00:00,  6.55s/it]
+Evaluating: 100%|██████████| 1/1 [00:06<00:00,  6.55s/it]
+INFO:__main__:Saving 3 results to ./eval_outputs/evaluation_results_cm.jsonl
+INFO:__main__:Evaluation complete!
+INFO:__main__:Average steps per question: 5.00
+INFO:__main__:Computing Confusion Matrix...
+INFO:__main__:Number of unique labels: 4
+WARNING:__main__:scikit-learn not installed. Using manual calculation.
+INFO:__main__:Confusion matrix saved to ./eval_outputs/confusion_matrix.txt
+INFO:__main__:Computing Detailed Metrics Report...
+INFO:__main__:Metrics report saved to ./eval_outputs/metrics_report.txt
+
+Loading data from test_data_mini.jsonl
+loading pretrained bertscore on cuda:0...
+loading KTP model (opt-125m)...
+
+============================================================
+CONFUSION MATRIX (Accuracy: 0.00%)
+============================================================
+         True \ Pred | 2+2 equals | Machine le | Paris is t | [ERROR: No
+------------------------------------------------------------------------
+       2+2 equals 4. |          0 |          0 |          0 |          1
+Machine learning is  |          0 |          0 |          0 |          1
+Paris is the capital |          0 |          0 |          0 |          1
+[ERROR: No module na |          0 |          0 |          0 |          0
+============================================================
+
+
+================================================================================
+NLP METRICS REPORT
+================================================================================
+
+OVERALL PERFORMANCE (3 samples):
+----------------------------------------
+  Avg BERT_F1   : -0.1812
+  Avg BLEU      : 0.0000
+  Avg ROUGEL    : 0.0000
+
+PER-MODEL PERFORMANCE:
+----------------------------------------------------------------------------------------------------
+Model Name                | Count  | BERT-F1    | BLEU       | ROUGE-L   
+----------------------------------------------------------------------------------------------------
+OpenAssistant-12B         | 2      | -0.1803     | 0.0000     | 0.0000
+koala-7B-HF               | 1      | -0.1830     | 0.0000     | 0.0000
+================================================================================
+
+

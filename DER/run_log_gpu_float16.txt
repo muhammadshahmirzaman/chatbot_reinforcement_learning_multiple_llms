@@ -1,0 +1,93 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO:__main__:Device: cuda:0, Available GPUs: 1
+INFO:__main__:Loading model registry from ./config/models_production.yaml
+INFO:adapters.registry:Registered model 'opt-125m' (offline)
+INFO:adapters.registry:Registered model 'cached-baseline' (offline)
+INFO:__main__:Loaded 2 models: ['opt-125m', 'cached-baseline']
+INFO:__main__:Starting training for 1 epochs
+
+Epoch 1/1:   0%|          | 0/2 [00:00<?, ?it/s]INFO:adapters.resource_manager:Loading model 'opt-125m' to cuda
+INFO:adapters.offline.transformers_adapter:Loading opt-125m from ./opt-125m to cuda
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO:adapters.resource_manager:Loading model 'opt-125m' to cuda
+INFO:adapters.offline.transformers_adapter:Loading opt-125m from ./opt-125m to cuda
+ERROR:__main__:Thread 1 failed: Cannot copy out of meta tensor; no data! Please use torch.nn.Module.to_empty() instead of torch.nn.Module.to() when moving module from meta to a different device.
+INFO:adapters.offline.transformers_adapter:Successfully loaded opt-125m
+INFO:adapters.resource_manager:Loading model 'cached-baseline' to cuda
+INFO:adapters.offline.cached_adapter:No cache file found at cache\baseline_responses.json, starting fresh
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+INFO:__main__:Saved models at epoch 0
+
+Epoch 1/1:  50%|█████     | 1/2 [00:43<00:43, 43.13s/it]WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+WARNING:adapters.offline.cached_adapter:Cache miss for cached-baseline with no fallback
+INFO:__main__:Saved models at epoch 0
+
+Epoch 1/1: 100%|██████████| 2/2 [01:16<00:00, 37.65s/it]
+Epoch 1/1: 100%|██████████| 2/2 [01:16<00:00, 38.47s/it]
+INFO:__main__:Training complete!
+
+
+📊 Collecting system statistics...
+
+================================================================================
+RUNNING QUICK TEST
+================================================================================
+
+Command: C:\ProgramData\anaconda3\envs\chat\python.exe train_ppo_multi.py --model_config ./config/models_production.yaml --train_data_path ./test_data_mini.jsonl --epochs 1 --batch_size 2 --max_train_data_size 5 --device cuda:0 --thread_nums 2
+
+Loading data from ./test_data_mini.jsonl
+loading pretrained bertscore on cuda:0...
+loading KTP model (opt-125m)...
+
+================================================================================
+                         TRAINING STATISTICS DASHBOARD
+================================================================================
+
+📊 TRAINING SUMMARY
+--------------------------------------------------------------------------------
+  Status: [OK] SUCCESS
+  Duration: 92.08 seconds (1.53 minutes)
+  Started: 2025-12-15 11:57:29
+  Ended: 2025-12-15 11:59:07
+
+🎮 GPU STATISTICS
+--------------------------------------------------------------------------------
+  Device: NVIDIA GeForce RTX 4060
+  Memory Allocated: 0.00 GB
+  Memory Reserved: 0.24 GB
+  Peak Memory Usage: 0.23 GB
+  Utilization: 0.0% (assuming 24GB GPU)
+
+💻 CPU & MEMORY STATISTICS
+--------------------------------------------------------------------------------
+  CPU Usage: 16.6%
+  CPU Cores: 12
+  RAM Used: 7.69 GB / 15.84 GB
+  RAM Usage: 48.5%
+
+🤖 MODEL STATUS
+--------------------------------------------------------------------------------
+  [OK] opt-125m             [TransformersAdapter ] Ready
+  [OK] cached-baseline      [CachedAdapter       ] Ready
+
+  Total Models: 2
+  Ready: 2 | Errors: 0
+
+📈 PERFORMANCE METRICS
+--------------------------------------------------------------------------------
+  Checkpoints Created: 2
+  Latest Checkpoint: critic_epoch_0.bin
+
+================================================================================
+                            END OF STATISTICS
+================================================================================
+
+
+================================================================================
+[OK] TRAINING COMPLETED SUCCESSFULLY!
+================================================================================
+
+Checkpoints saved in: ./checkpoints/
+

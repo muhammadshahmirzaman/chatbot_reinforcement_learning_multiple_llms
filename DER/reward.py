@@ -57,8 +57,8 @@ class Bert_calculate:
                 self.scorer = BERTScorer(
                     lang="en",
                     device=self.device,
-                    model_type=model_name,
-                    use_fast=True
+                    model_type=model_name # ,
+                    # use_fast=True
                 )
                 return
             except Exception as e:

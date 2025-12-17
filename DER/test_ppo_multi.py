@@ -18,6 +18,7 @@ from tqdm import tqdm
 
 from utils.data import load_data, Dataset
 from ppo_discreate import Actor, Critic, PPO
+from reward import KTP_calculate
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -61,12 +62,23 @@ def main(args):
     
     critic = Critic(args.critic_model, 256).to(device)
     
+    # Initialize reward calculator/KTP engine
+    reward_calculator = KTP_calculate(device=device)
+    logger.info("Loading KTP engine...")
+    reward_calculator.load_checkpoint()
+    
     # Load trained weights
     logger.info(f"Loading actor from {args.actor_model_bin}")
-    actor.load_state_dict(torch.load(args.actor_model_bin, map_location=device))
+    if args.actor_model_bin:
+        actor.load_state_dict(torch.load(args.actor_model_bin, map_location=device))
+    else:
+        logger.warning("No actor checkpoint provided, using random initialization")
     
     logger.info(f"Loading critic from {args.critic_model_bin}")
-    critic.load_state_dict(torch.load(args.critic_model_bin, map_location=device))
+    if args.critic_model_bin:
+        critic.load_state_dict(torch.load(args.critic_model_bin, map_location=device))
+    else:
+        logger.warning("No critic checkpoint provided, using random initialization")
     
     actor.eval()
     critic.eval()
@@ -82,6 +94,7 @@ def main(args):
     predictions = []
 
     for batch_idx, batch in enumerate(tqdm(test_dataloader, desc="Evaluating")):
+        logger.info(f"Processing batch {batch_idx}")
         input_ids = batch['input_ids'].to(device)
         attention_masks = batch['attention_mask'].to(device)
         sources = batch['source']
@@ -98,9 +111,15 @@ def main(args):
             for j in range(threads_to_create):
                 # Create environment
                 if args.use_legacy_mode:
-                    env = env_class(actor, None)  # No reward calculator for eval
+                    env = env_class(actor, None)
                 else:
-                    env = env_class(actor, None, model_registry)
+                    env = env_class(
+                        actor, 
+                        reward_calculator, 
+                        model_registry,
+                        state_device=device,
+                        actor_device=device
+                    )
                 
                 args_tuple = (
                     env,
@@ -127,6 +146,7 @@ def main(args):
             
             i += args.thread_nums
         
+        logger.info(f"Batch {batch_idx}: collected {len(trajectorys)} trajectories")
         all_trajectories.extend(trajectorys)
         for traj in trajectorys:
             if 'reference' in traj:
@@ -273,11 +293,11 @@ if __name__ == '__main__':
     # Model config
     parser.add_argument("--actor_model", type=str, default="./opt-125m",
                         help="Path to actor model config")
-    parser.add_argument("--actor_model_bin", type=str, default="./checkpoints/actor_epoch_9.bin",
+    parser.add_argument("--actor_model_bin", type=str, default=None,
                         help="Path to trained actor weights")
     parser.add_argument("--critic_model", type=str, default="./opt-125m",
                         help="Path to critic model config")
-    parser.add_argument("--critic_model_bin", type=str, default="./checkpoints/critic_epoch_9.bin",
+    parser.add_argument("--critic_model_bin", type=str, default=None,
                         help="Path to trained critic weights")
     
     # Mode
@@ -296,7 +316,7 @@ if __name__ == '__main__':
     parser.add_argument("--thread_nums", type=int, default=10)
     
     # Device
-    parser.add_argument("--device", type=str, default="cuda:3")
+    parser.add_argument("--device", type=str, default="cuda:0")
     
     # Output
     parser.add_argument("--out_dir", type=str, default="./eval_outputs/")

@@ -246,7 +246,9 @@ def main():
             sys.executable, "train_ppo_multi.py",
             "--model_config", "./config/models_production.yaml",
             "--epochs", str(args.epochs),
-            "--device", args.device
+            "--device", args.device,
+            "--thread_nums", "2",  # Keep low for 8GB GPU
+            "--batch_size", "4",   # Smaller batch for memory
         ]
     else:
         print("Usage:")

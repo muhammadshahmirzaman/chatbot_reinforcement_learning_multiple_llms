@@ -30,7 +30,7 @@ models:
     config:
       model_name_or_path: "./opt-125m"
       device: "cuda:0"
-      dtype: "float32"
+      dtype: "float16"
       estimated_memory_mb: 500
       use_safetensors: true
   
@@ -38,8 +38,7 @@ models:
   # Fits directly on 8GB GPU (~5GB VRAM) using bitsandbytes
   - name: "openassistant-falcon-7b-4bit"
     type: "transformers"
-    execution_mode: "offline"
-    enabled: true
+    enabled: false
     config:
       model_name_or_path: "OpenAssistant/falcon-7b-sft-mix-2000"
       device: "cuda:0"

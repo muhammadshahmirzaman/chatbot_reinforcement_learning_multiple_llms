@@ -215,7 +215,13 @@ class TransformersAdapter(OfflineAdapter):
             return_tensors="pt",
             truncation=True,
             max_length=2048
-        ).to(self.device)
+        )
+        
+        # Remove token_type_ids if present (fixes Falcon/OPT/Llama compatibility issues)
+        if "token_type_ids" in inputs:
+            del inputs["token_type_ids"]
+            
+        inputs = inputs.to(self.device)
         
         # Generate
         with torch.no_grad():
